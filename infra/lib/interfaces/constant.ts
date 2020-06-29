@@ -5,4 +5,4 @@ export enum AppEnv {
   PROD = 'production',
 };
 
-export const Region = 'ap-northeast-2';
+export const Region = 'us-east-1';

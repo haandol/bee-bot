@@ -32,6 +32,7 @@ export class LambdaStack extends cdk.Stack {
       handler: 'test.handler',
       role: lambdaExecutionRole,
     });
+    lexTestHandlerFunction.grantInvoke(new iam.ServicePrincipal('lex.amazonaws.com'))
  
   }
 
