@@ -17,6 +17,6 @@ const app = new cdk.App({
 
 const lambdaStack = new LambdaStack(app, `LambdaStack${Namespace}`);
 const apiGatewayStack = new ApiGatewayStack(app, `ApiGatewayStack${Namespace}`, {
-  eventHandlerFunction: lambdaStack.eventHandlerFunction,
+  slackEventHandlerFunction: lambdaStack.slackEventHandlerFunction,
 });
 apiGatewayStack.addDependency(lambdaStack);
