@@ -26,13 +26,13 @@ export class LambdaStack extends cdk.Stack {
       role: lambdaExecutionRole,
     });
 
-    const lexTestHandlerFunction = new lambda.Function(this, `LexTestHandlerFunction${ns}`, {
+    const lexFulfillmentHandlerFunction = new lambda.Function(this, `LexFulfillmentHandlerFunction${ns}`, {
       runtime: lambda.Runtime.PYTHON_3_7,
       code: lambda.Code.fromAsset(path.resolve(__dirname, './functions/lex')),
-      handler: 'test.handler',
+      handler: 'fulfillment_handler.handler',
       role: lambdaExecutionRole,
     });
-    lexTestHandlerFunction.grantInvoke(new iam.ServicePrincipal('lex.amazonaws.com'))
+    lexFulfillmentHandlerFunction.grantInvoke(new iam.ServicePrincipal('lex.amazonaws.com'))
  
   }
 
