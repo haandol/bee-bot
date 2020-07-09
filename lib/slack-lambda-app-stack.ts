@@ -56,6 +56,7 @@ export class SlackLambdaStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.resolve(__dirname, './functions/slack')),
       handler: 'consumer.handler',
       role: lambdaExecutionRole,
+      memorySize: 512,
       environment: {
         TOKEN: token,
         QUEUE_URL: props.queue.queueUrl,

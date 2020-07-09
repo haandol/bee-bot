@@ -10,7 +10,7 @@ const app = new cdk.App({
   context: {
     ns: Namespace,
     region: Region,
-    token: 'xoxb-1137511909639-1255395780720-nVdMTvj6nwIVpMbkcyMmtA6X',
+    token: 'xoxb-1137511909639-1255395780720-mSjfyv93nW3F7xAaeOXi59pV',
     apps: JSON.stringify(['hello_world', 'helper']),
   },
 });
