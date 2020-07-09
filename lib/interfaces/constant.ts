@@ -1,8 +1,3 @@
-export const Namespace = 'UnicornGym';
+export const Namespace = 'BeeBot';
 
-export enum AppEnv {
-  DEV = 'development',
-  PROD = 'production',
-};
-
-export const Region = 'us-east-1';
+export const Region = 'ap-northeast-2';

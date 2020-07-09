@@ -2,21 +2,26 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { ApiGatewayStack } from '../lib/api-gateway-stack';
-import {
-  Namespace, AppEnv, Region,
-} from '../lib/interfaces/constant';
-import { LambdaStack } from '../lib/lambda-app-stack';
+import { SqsStack } from '../lib/sqs-stack';
+import { SlackLambdaStack } from '../lib/slack-lambda-app-stack';
+import { Namespace, Region } from '../lib/interfaces/constant';
 
 const app = new cdk.App({
   context: {
     ns: Namespace,
-    appEnv: AppEnv.DEV,
     region: Region,
+    token: 'xoxb-1137511909639-1255395780720-nVdMTvj6nwIVpMbkcyMmtA6X',
+    apps: JSON.stringify(['hello_world', 'helper']),
   },
 });
 
-const lambdaStack = new LambdaStack(app, `LambdaStack${Namespace}`);
-const apiGatewayStack = new ApiGatewayStack(app, `ApiGatewayStack${Namespace}`, {
-  slackEventHandlerFunction: lambdaStack.slackEventHandlerFunction,
+const sqsStack = new SqsStack(app, `${Namespace}Sqs`);
+const slackLambdaStack = new SlackLambdaStack(app, `${Namespace}Lambda`, {
+  queue: sqsStack.queue,
+  dlq: sqsStack.dlq,
 });
-apiGatewayStack.addDependency(lambdaStack);
+slackLambdaStack.addDependency(sqsStack);
+const apiGatewayStack = new ApiGatewayStack(app, `${Namespace}ApiGateway`, {
+  slackEventHandler: slackLambdaStack.slackEventHandler,
+});
+apiGatewayStack.addDependency(slackLambdaStack);

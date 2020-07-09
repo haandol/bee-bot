@@ -4,7 +4,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 
 interface Props extends cdk.StackProps {
-  slackEventHandlerFunction: lambda.Function;
+  slackEventHandler: lambda.Function;
 }
 
 export class ApiGatewayStack extends cdk.Stack {
@@ -20,11 +20,10 @@ export class ApiGatewayStack extends cdk.Stack {
     this.api = this.createApiGateway(ns);
     this.api.root.addMethod('ANY')
 
-    this.credentialsRole = new iam.Role(this, 'ApigwCredentialRole', {
+    this.credentialsRole = new iam.Role(this, `${ns}ApigwCredentialRole`, {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
       managedPolicies: [
         { managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs' },
-        { managedPolicyArn: 'arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess' },
         { managedPolicyArn: 'arn:aws:iam::aws:policy/AWSLambdaFullAccess' },
       ]
     });
@@ -41,15 +40,14 @@ export class ApiGatewayStack extends cdk.Stack {
     };
 
     this.registerSlackEventHandler(
-      props.slackEventHandlerFunction,
+      props.slackEventHandler,
       this.api.root.addResource('slack'),
       methodOptions
     );
  }
 
   createApiGateway(ns: string): apigw.RestApi {
-    return new apigw.RestApi(this, `RestApi${ns}`, {
-      restApiName: `RestApi${ns}`,
+    return new apigw.RestApi(this, `${ns}RestApi`, {
       deploy: true,
       deployOptions: {
         stageName: 'dev',
