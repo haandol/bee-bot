@@ -1,6 +1,6 @@
-# Serverless Slack Bot
+# Bee bot
  
-This repository is about Serverless Slack Bot
+Bee-bot is Serverless Slack Bot
 
 # Prerequisites
 
@@ -34,7 +34,7 @@ $ cdk deploy "*" --require-approval never
 
 # Usage
 
-
+working progress
 
 # Cleanup
 
