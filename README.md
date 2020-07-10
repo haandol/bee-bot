@@ -53,7 +53,7 @@ Attach path `slack` to it and copy it to clipboard.
 
 ## Store Access Token to Amazon SSM Parameter Store
 
-1. Run `./scripts/update_slack_token.py`
+Run `./scripts/update_slack_token.py`
 
 ```bash
 $ ./scripts/update_slack_token.py --token YOUR_BOT_ACCESS_TOKEN
@@ -66,11 +66,11 @@ $ ./scripts/update_slack_token.py --token YOUR_BOT_ACCESS_TOKEN
  'Version': 1}
 ```
 
-### Play with it on the Slack
+## Hangout with your bot
 
-Type command with Command Prefix (default is `!` ) on the channel where the bot is on.
+1. Invite your bot to channel.
 
-Honey is going to respond to your command kindly.
+2. Type command with Command Prefix (default is `!` ) on the channel where the bot is on.
 
 ```
 YOU: !help
@@ -78,13 +78,13 @@ YOU: !help
 Honey: Hello world!!
 ```
 
-# Adding Apps
+# Apps
 
 We call each function that you plugged-in to the Honey, the app.
 
 Built-in and example apps are in the `apps` directory.
 
-### App and Command
+## App and Command
 
 Below is basic form of app. notice that the function has prefix, `async`.
 This just says `Hello world!!` to the channel when user typed the command, `!hi`.
@@ -111,8 +111,7 @@ And Honey supports multiple commands for each function.
 The above app can be invoked the command with Command Prefix (default is `!`) on the channel.
 It would be `!hello`, `!hi`, `!하이` or `!ㅎㅇ`
 
-
-### Tokenizer
+## Tokenizer
 
 Honey automatically split your message into tokens by whitespaces.
 
