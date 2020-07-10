@@ -18,13 +18,15 @@ export class SlackLambdaStack extends cdk.Stack {
     super(scope, id, props);
 
     const ns = scope.node.tryGetContext('ns') || '';
-    const token = scope.node.tryGetContext('token') || '';
+    const tokenKey = scope.node.tryGetContext('tokenKey') || '';
     const apps = scope.node.tryGetContext('apps') || '';
+    const cmdPrefix = scope.node.tryGetContext('cmdPrefix') || '';
 
     const lambdaExecutionRole = new iam.Role(this, `${ns}LambdaExecution`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
         { managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole' },
+        { managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess' },
       ],
     });
 
@@ -33,6 +35,8 @@ export class SlackLambdaStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.resolve(__dirname, './functions/slack')),
       handler: 'event_handler.handler',
       role: lambdaExecutionRole,
+      memorySize: 128,
+      timeout: cdk.Duration.seconds(5),
       environment: {
         QUEUE_URL: props.queue.queueUrl,
       },
@@ -56,11 +60,13 @@ export class SlackLambdaStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.resolve(__dirname, './functions/slack')),
       handler: 'consumer.handler',
       role: lambdaExecutionRole,
-      memorySize: 512,
+      memorySize: 256,
+      timeout: cdk.Duration.seconds(5),
       environment: {
-        TOKEN: token,
+        TOKEN_KEY: tokenKey,
         QUEUE_URL: props.queue.queueUrl,
         APPS: apps,
+        CMD_PREFIX: cmdPrefix,
       },
       currentVersionOptions: {
         removalPolicy: cdk.RemovalPolicy.RETAIN,

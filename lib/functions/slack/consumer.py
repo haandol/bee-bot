@@ -12,23 +12,33 @@ logger = logging.getLogger('consumter')
 logger.setLevel(logging.INFO)
 
 sqs = boto3.client('sqs')
+ssm = boto3.client('ssm')
 
-TOKEN = os.environ['TOKEN']
+TOKEN_KEY = os.environ['TOKEN_KEY']
 QUEUE_URL = os.environ['QUEUE_URL']
-CMD_PREFIX = os.environ.get('CMD_PREFIX', '!')
-CMD_LENGTH = len(CMD_PREFIX)
 APPS = json.loads(os.environ['APPS'])
-
+CMD_PREFIX = os.environ['CMD_PREFIX']
+CMD_LENGTH = len(CMD_PREFIX)
 
 consumer = None
 
+
 class Consumer(object):
-    def __init__(self, token, queue_url, logger):
-        self.token = token
-        self.queue_url = queue_url
+    def __init__(self):
+        self.slack_token = None
+        self.queue_url = QUEUE_URL
         self.apps, self.docs = self.load_apps()
         self.logger = logger
         self.post_url = 'https://slack.com/api/chat.postMessage'
+
+    def get_slack_token(self):
+        if not self.slack_token:
+            try:
+                resp = ssm.get_parameter(Name=TOKEN_KEY, WithDecryption=True)
+                self.slack_token = resp['Parameter']['Value']
+            except:
+                self.logger.error(traceback.format_exc())
+        return self.slack_token
 
     def load_apps(self):
         docs = ['='*14, 'Usage', '='*14]
@@ -71,11 +81,18 @@ class Consumer(object):
             return (text[CMD_LENGTH:], '')
 
     def post_message(self, channel, message):
-        requests.post(url=self.post_url, data={
-            'token': self.token,
+        resp = requests.post(url=self.post_url, data={
+            'token': self.get_slack_token(),
             'channel': channel,
             'text': message,
-        })
+        }, timeout=3).json()
+        if 'error' in resp and 'invalid_auth' == resp['error']:
+            self.slack_token = None
+            requests.post(url=self.post_url, data={
+                'token': self.get_slack_token(),
+                'channel': channel,
+                'text': message,
+            }, timeout=3)
 
 
 def handler(event, context):
@@ -83,7 +100,7 @@ def handler(event, context):
 
     global consumer
     if not consumer:
-        consumer = Consumer(TOKEN, QUEUE_URL, logger)
+        consumer = Consumer()
 
     for record in event['Records']:
         receipt_handler = record['receiptHandle']
