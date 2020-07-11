@@ -15,7 +15,7 @@ export class SqsStack extends cdk.Stack {
     this.queue = new sqs.Queue(this, `${ns}Queue`, {
       deadLetterQueue: {
         queue: this.dlq,
-        maxReceiveCount: 10,
+        maxReceiveCount: 5,
       }
     });
   }
