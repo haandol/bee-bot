@@ -7,14 +7,13 @@ import requests
 import traceback
 from importlib import import_module
 sys.path.append(os.path.abspath('.'))
-
 logger = logging.getLogger('consumter')
 logger.setLevel(logging.INFO)
 
 sqs = boto3.client('sqs')
 ssm = boto3.client('ssm')
 
-TOKEN_KEY = os.environ['TOKEN_KEY']
+ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
 QUEUE_URL = os.environ['QUEUE_URL']
 APPS = json.loads(os.environ['APPS'])
 CMD_PREFIX = os.environ['CMD_PREFIX']
@@ -25,20 +24,20 @@ consumer = None
 
 class Consumer(object):
     def __init__(self):
-        self.slack_token = None
+        self.access_token = None
         self.queue_url = QUEUE_URL
         self.apps, self.docs = self.load_apps()
         self.logger = logger
         self.post_url = 'https://slack.com/api/chat.postMessage'
 
-    def get_slack_token(self):
-        if not self.slack_token:
+    def get_access_token(self):
+        if not self.access_token:
             try:
-                resp = ssm.get_parameter(Name=TOKEN_KEY, WithDecryption=True)
-                self.slack_token = resp['Parameter']['Value']
+                resp = ssm.get_parameter(Name=ACCESS_TOKEN_KEY, WithDecryption=True)
+                self.access_token = resp['Parameter']['Value']
             except:
                 self.logger.error(traceback.format_exc())
-        return self.slack_token
+        return self.access_token
 
     def load_apps(self):
         docs = ['='*14, 'Usage', '='*14]
@@ -82,14 +81,14 @@ class Consumer(object):
 
     def post_message(self, channel, message):
         resp = requests.post(url=self.post_url, data={
-            'token': self.get_slack_token(),
+            'token': self.get_access_token(),
             'channel': channel,
             'text': message,
         }, timeout=3).json()
         if 'error' in resp and 'invalid_auth' == resp['error']:
-            self.slack_token = None
+            self.access_token = None
             requests.post(url=self.post_url, data={
-                'token': self.get_slack_token(),
+                'token': self.get_access_token(),
                 'channel': channel,
                 'text': message,
             }, timeout=3)

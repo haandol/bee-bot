@@ -5,14 +5,15 @@ import { ApiGatewayStack } from '../lib/api-gateway-stack';
 import { SqsStack } from '../lib/sqs-stack';
 import { SlackLambdaStack } from '../lib/slack-lambda-app-stack';
 import {
-  Namespace, Region, TokenKey, Apps, CmdPrefix,
+  Namespace, Region, AccessTokenKey, VerificationTokenKey, Apps, CmdPrefix,
 } from '../lib/interfaces/constant';
 
 const app = new cdk.App({
   context: {
     ns: Namespace,
     region: Region,
-    tokenKey: TokenKey,
+    accessTokenKey: AccessTokenKey,
+    verificationTokenKey: VerificationTokenKey,
     apps: JSON.stringify(Apps),
     cmdPrefix: CmdPrefix,
   },

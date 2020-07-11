@@ -43,26 +43,34 @@ Attach path `slack` to it and copy it to clipboard.
 
 # Usage
 
-## Add Slack Event bot and Get Access Token
+## Add Event-bot and get Access & Verification Tokens
 1. Visit [Slack API](https://api.slack.com/) and click `Start Building` to add bot to your account.
 2. Visit *App Home*, Add below scopes to your *Bot Token Scopes*. `chat:write`, `channels:history`, `channels:read`, `im:read`, `im:history`, `im:write`, `groups:history`, `groups:write`, `groups:read`.
 2. Visit *Event Subscriptions -> Enable Events*, enable events api and set the *Request URL* paste from your clipboard.
 3. Visit *Event Subscriptions -> Subscribe to bot events*, Add bot below events, `message.channels` and `message.im`.
 4. Visit *OAuth & Permissions -> OAuth Tokens & Redirect URLs*, click `Install App to Workspace` and click `Allow`.
 5. Visit *OAuth & Permissions -> OAuth Tokens & Redirect URLs*, copy *Bot Access Token*
+6. Visit *Basic Information -> Verification Token*, copy *Verification Token*
 
-## Store Access Token to Amazon SSM Parameter Store
+## Store Tokens to Amazon SSM Parameter Store
 
-Run `./scripts/update_slack_token.py`
+Run `./scripts/update_slack_token.py` to store tokens securely.
 
 ```bash
-$ ./scripts/update_slack_token.py --token YOUR_BOT_ACCESS_TOKEN
-{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/__slack_token__',
+$ ./scripts/update_slack_token.py --access-token YOUR_BOT_ACCESS_TOKEN --verification-token YOUR_VERIFICATION_TOKEN
+{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/__slack_access_token__',
  'DataType': 'text',
  'LastModifiedDate': datetime.datetime(2020, 7, 10, 16, 36, 26, 592000, tzinfo=tzlocal()),
- 'Name': '__slack_token__',
+ 'Name': '__slack_access_token__',
  'Type': 'SecureString',
  'Value': 'YOUR_BOT_ACCESS_TOKEN'
+ 'Version': 1}
+{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/__slack_verfication_token__',
+ 'DataType': 'text',
+ 'LastModifiedDate': datetime.datetime(2020, 7, 10, 16, 36, 26, 592000, tzinfo=tzlocal()),
+ 'Name': '__slack_verfication_token__',
+ 'Type': 'SecureString',
+ 'Value': 'YOUR_VERIFICATION_TOKEN'
  'Version': 1}
 ```
 
@@ -139,5 +147,6 @@ destroy provisioned cloud resources
 
 ```bash
 $ cdk destroy "*"
-$ aws ssm delete-parameter --name "__slack__token__"
+$ aws ssm delete-parameter --name "__slack_access_token__"
+$ aws ssm delete-parameter --name "__slack_verification_token__"
 ```

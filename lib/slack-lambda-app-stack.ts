@@ -18,7 +18,8 @@ export class SlackLambdaStack extends cdk.Stack {
     super(scope, id, props);
 
     const ns = scope.node.tryGetContext('ns') || '';
-    const tokenKey = scope.node.tryGetContext('tokenKey') || '';
+    const accessTokenKey = scope.node.tryGetContext('accessTokenKey') || '';
+    const verificationTokenKey = scope.node.tryGetContext('verificationTokenKey') || '';
     const apps = scope.node.tryGetContext('apps') || '';
     const cmdPrefix = scope.node.tryGetContext('cmdPrefix') || '';
 
@@ -38,6 +39,7 @@ export class SlackLambdaStack extends cdk.Stack {
       memorySize: 128,
       timeout: cdk.Duration.seconds(5),
       environment: {
+        VERIFICATION_TOKEN_KEY: verificationTokenKey,
         QUEUE_URL: props.queue.queueUrl,
       },
       currentVersionOptions: {
@@ -63,7 +65,7 @@ export class SlackLambdaStack extends cdk.Stack {
       memorySize: 256,
       timeout: cdk.Duration.seconds(5),
       environment: {
-        TOKEN_KEY: tokenKey,
+        ACCESS_TOKEN_KEY: accessTokenKey,
         QUEUE_URL: props.queue.queueUrl,
         APPS: apps,
         CMD_PREFIX: cmdPrefix,
