@@ -29,7 +29,7 @@ class Robot(object):
         self.apps, self.docs = self.load_apps()
         self.logger = logger
         self.post_url = 'https://slack.com/api/chat.postMessage'
-        self.brain = Brain()
+        self.brain = Brain(ssm)
 
     def get_access_token(self):
         if not self.access_token:
@@ -96,8 +96,8 @@ class Robot(object):
 
 
 class Brain(object):
-    def __init__(self):
-        self.ssm = boto3.client('ssm')
+    def __init__(self, ssm):
+        self.ssm = ssm
 
     def store(self, key, value):
         self.ssm.put_parameter(Name=key, Value=value, Type='String')
