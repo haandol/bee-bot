@@ -58,17 +58,17 @@ Run `./scripts/update_slack_token.py` to store tokens securely.
 
 ```bash
 $ ./scripts/update_slack_token.py --access-token YOUR_BOT_ACCESS_TOKEN --verification-token YOUR_VERIFICATION_TOKEN
-{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/__slack_access_token__',
+{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/BEEBOT/SLACK/TOKEN/ACCESS',
  'DataType': 'text',
  'LastModifiedDate': datetime.datetime(2020, 7, 10, 16, 36, 26, 592000, tzinfo=tzlocal()),
- 'Name': '__slack_access_token__',
+ 'Name': '/BEEBOT/SLACK/TOKEN/ACCESS',
  'Type': 'SecureString',
  'Value': 'YOUR_BOT_ACCESS_TOKEN'
  'Version': 1}
-{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/__slack_verfication_token__',
+{'ARN': 'arn:aws:ssm:ap-northeast-2:ACCOUNT:parameter/BEEBOT/SLACK/TOKEN/VERIFICATION',
  'DataType': 'text',
  'LastModifiedDate': datetime.datetime(2020, 7, 10, 16, 36, 26, 592000, tzinfo=tzlocal()),
- 'Name': '__slack_verfication_token__',
+ 'Name': '/BEEBOT/SLACK/TOKEN/VERIFICATION',
  'Type': 'SecureString',
  'Value': 'YOUR_VERIFICATION_TOKEN'
  'Version': 1}
@@ -147,6 +147,6 @@ destroy provisioned cloud resources
 
 ```bash
 $ cdk destroy "*"
-$ aws ssm delete-parameter --name "__slack_access_token__"
-$ aws ssm delete-parameter --name "__slack_verification_token__"
+$ aws ssm delete-parameter --name "/BEEBOT/SLACK/TOKEN/ACCESS"
+$ aws ssm delete-parameter --name "/BEEBOT/SLACK/TOKEN/VERIFICATION"
 ```

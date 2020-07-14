@@ -5,8 +5,8 @@ from pprint import pprint
 
 ssm = boto3.client('ssm')
 
-ACCESS_TOKEN_KEY = '__slack_access_token__'
-VERFICATION_TOKEN_KEY = '__slack_verification_token__'
+ACCESS_TOKEN_KEY = '/BEEBOT/SLACK/TOKEN/ACCESS'
+VERFICATION_TOKEN_KEY = '/BEEBOT/SLACK/TOKEN/VERIFICATION'
 
 
 def parse_args():
