@@ -19,16 +19,17 @@ APPS = json.loads(os.environ['APPS'])
 CMD_PREFIX = os.environ['CMD_PREFIX']
 CMD_LENGTH = len(CMD_PREFIX)
 
-consumer = None
+robot = None
 
 
-class Consumer(object):
+class Robot(object):
     def __init__(self):
         self.access_token = None
         self.queue_url = QUEUE_URL
         self.apps, self.docs = self.load_apps()
         self.logger = logger
         self.post_url = 'https://slack.com/api/chat.postMessage'
+        self.brain = Brain()
 
     def get_access_token(self):
         if not self.access_token:
@@ -94,19 +95,33 @@ class Consumer(object):
             }, timeout=3)
 
 
+class Brain(object):
+    def __init__(self):
+        self.ssm = boto3.client('ssm')
+
+    def store(self, key, value):
+        self.ssm.put_parameter(Name=key, Value=value, Type='String')
+    
+    def get(self, key):
+        try:
+            return self.ssm.get_parameter(Name=key)
+        except ssm.exceptions.ParameterNotFound:
+            return ''
+
+
 def handler(event, context):
     logger.info(event)
 
-    global consumer
-    if not consumer:
-        consumer = Consumer()
+    global robot
+    if not robot:
+        robot = Robot()
 
     for record in event['Records']:
         receipt_handler = record['receiptHandle']
         body = json.loads(record['body'])
         data = (body['channel'], body['user'], body['text'])
         try:
-            consumer.handle_data(data)
+            robot.handle_data(data)
         except:
             traceback.print_exc()
         else:

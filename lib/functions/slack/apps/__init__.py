@@ -43,7 +43,7 @@ def on_command(commands):
                         robot.post_message(channel, text)
                         return text
                     else:
-                        robot.logger.warning('Can not send to empty channel')
+                        robot.logger.error('Can not send to empty channel')
                 except:
                     robot.logger.error('Can not deliver the message because...')
                     robot.logger.error(traceback.format_exc())
