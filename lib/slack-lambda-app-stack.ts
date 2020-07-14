@@ -27,7 +27,7 @@ export class SlackLambdaStack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
         { managedPolicyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole' },
-        { managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess' },
+        { managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonSSMFullAccess' },
       ],
     });
 
