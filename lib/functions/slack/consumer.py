@@ -104,7 +104,7 @@ class Brain(object):
     
     def get(self, key):
         try:
-            return self.ssm.get_parameter(Name=key)
+            return self.ssm.get_parameter(Name=key)['Parameter']['Value']
         except ssm.exceptions.ParameterNotFound:
             return ''
 
