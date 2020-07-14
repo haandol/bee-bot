@@ -108,6 +108,11 @@ class Brain(object):
         except ssm.exceptions.ParameterNotFound:
             return ''
 
+    def get_list(self, path, max_results=10):
+        return self.ssm.get_parameters_by_path(
+            Path=path, Recursive=True, MaxResults=max_results
+        )['Parameters']
+
 
 def handler(event, context):
     logger.info(event)
