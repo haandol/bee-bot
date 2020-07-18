@@ -90,7 +90,7 @@ Honey: Hello world!!
 
 We call each function that you plugged-in to the Honey, the app.
 
-Built-in and example apps are in the `apps` directory.
+Built-in and example apps are in the `libs/functions/slack/apps` directory.
 
 ## App and Command
 
