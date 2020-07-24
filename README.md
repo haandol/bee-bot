@@ -1,6 +1,6 @@
 # Bee bot
  
-Bee-bot is Serverless Slack Bot
+Bee-bot is a Serverless Slack Bot
 
 Deploy this cdk will provision below architeture on you AWS Account.
 
@@ -21,7 +21,6 @@ Deploy this cdk will provision below architeture on you AWS Account.
 Install project dependencies
 
 ```bash
-$ cd infra
 $ npm i
 ```
 
