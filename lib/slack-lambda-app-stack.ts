@@ -7,6 +7,10 @@ import * as lambda from '@aws-cdk/aws-lambda';
 interface Props extends cdk.StackProps {
   queue: sqs.Queue;
   dlq: sqs.Queue;
+  accessTokenKey: string;
+  verificationTokenKey: string;
+  apps: string;
+  cmdPrefix: string;
 }
 
 export class SlackLambdaStack extends cdk.Stack {
@@ -18,10 +22,6 @@ export class SlackLambdaStack extends cdk.Stack {
     super(scope, id, props);
 
     const ns = scope.node.tryGetContext('ns') || '';
-    const accessTokenKey = scope.node.tryGetContext('accessTokenKey') || '';
-    const verificationTokenKey = scope.node.tryGetContext('verificationTokenKey') || '';
-    const apps = scope.node.tryGetContext('apps') || '';
-    const cmdPrefix = scope.node.tryGetContext('cmdPrefix') || '';
 
     const lambdaExecutionRole = new iam.Role(this, `${ns}LambdaExecution`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
@@ -39,7 +39,7 @@ export class SlackLambdaStack extends cdk.Stack {
       memorySize: 128,
       timeout: cdk.Duration.seconds(5),
       environment: {
-        VERIFICATION_TOKEN_KEY: verificationTokenKey,
+        VERIFICATION_TOKEN_KEY: props.verificationTokenKey,
         QUEUE_URL: props.queue.queueUrl,
       },
       currentVersionOptions: {
@@ -48,7 +48,7 @@ export class SlackLambdaStack extends cdk.Stack {
     });
     props.queue.grantSendMessages(this.slackEventHandler);
 
-    const requestsLayer = new lambda.LayerVersion(this, 'RequestsLayer', {
+    const requestsLayer = new lambda.LayerVersion(this, `${ns}RequestsLayer`, {
       compatibleRuntimes: [
         lambda.Runtime.PYTHON_3_7,
         lambda.Runtime.PYTHON_3_8,
@@ -65,10 +65,10 @@ export class SlackLambdaStack extends cdk.Stack {
       memorySize: 256,
       timeout: cdk.Duration.seconds(5),
       environment: {
-        ACCESS_TOKEN_KEY: accessTokenKey,
+        ACCESS_TOKEN_KEY: props.accessTokenKey,
         QUEUE_URL: props.queue.queueUrl,
-        APPS: apps,
-        CMD_PREFIX: cmdPrefix,
+        APPS: props.apps,
+        CMD_PREFIX: props.cmdPrefix,
       },
       currentVersionOptions: {
         removalPolicy: cdk.RemovalPolicy.RETAIN,
@@ -76,7 +76,7 @@ export class SlackLambdaStack extends cdk.Stack {
       layers: [requestsLayer],
     });
     props.queue.grantConsumeMessages(this.slackConsumer);
-    this.slackConsumer.addEventSourceMapping('slackConsumerMapping', {
+    this.slackConsumer.addEventSourceMapping(`${ns}SlackConsumerMapping`, {
       eventSourceArn: props.queue.queueArn,
     });
 
@@ -93,7 +93,7 @@ export class SlackLambdaStack extends cdk.Stack {
       },
     });
     props.dlq.grantConsumeMessages(this.dlqHandler);
-    this.dlqHandler.addEventSourceMapping('dlqHandlerMapping', {
+    this.dlqHandler.addEventSourceMapping(`${ns}DlqHandlerMapping`, {
       eventSourceArn: props.dlq.queueArn,
     });
 
