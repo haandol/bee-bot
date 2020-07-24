@@ -12,10 +12,13 @@ Deploy this cdk will provision below architeture on you AWS Account.
 [SQS Pricing](https://aws.amazon.com/ko/sqs/pricing/)
 [API Gateway Pricing](https://aws.amazon.com/ko/api-gateway/pricing/)
 
-Bee-bot hooks every message on the channel it is invited.
-If your group send messages 2M per month, the bot will charge you around 8$ per month.
+Bee-bot hooks every message on the channel where it is joined.
+If your organization send messages 2M per month, the bot will charge you around $8 per month.
 
-> $8 = API Gateway($7) + Lambda Event($0.4) + Lambda Consumer($0.2) + SQS($0.4)
+`$8 = API Gateway($7) + Lambda Event($0.4) + Lambda Consumer($0.2) + SQS($0.4)`
+
+> If you don't need to handle every message on the channel, subscribe only DM message events, such as `im:read`, `im:write`,
+> this makes Beebot only hooks DM events and it will save your money *a lot*.
 
 # Prerequisites
 
