@@ -46,9 +46,9 @@ class Robot(object):
 
         for name in APPS:
             app = import_module('apps.%s' % name)
-            docs.append('{0}{1}: {2}'.format(
-                CMD_PREFIX, ', '.join(app.run.commands), app.run.__doc__
-            ))
+            cmd_list_str = '|'.join(app.run.commands)
+            docs.append(f'{CMD_PREFIX}[{cmd_list_str}]: {app.run.__doc__}')
+                
             for command in app.run.commands:
                 apps[command] = app
 

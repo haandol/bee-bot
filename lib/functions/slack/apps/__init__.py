@@ -38,7 +38,7 @@ def on_command(commands):
                 tokens = _extract_tokens(message)
                 try:
                     channel, text = func(robot, channel, user, tokens)
-                    robot.logger.debug('[Debug] message: {}'.format(text))
+                    robot.logger.debug(f'[Debug] message: {text}')
                     if channel:
                         robot.post_message(channel, text)
                         return text
