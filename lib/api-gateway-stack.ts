@@ -8,8 +8,8 @@ interface Props extends cdk.StackProps {
 }
 
 export class ApiGatewayStack extends cdk.Stack {
-  public readonly api: apigw.RestApi;
-  public readonly credentialsRole: iam.Role;
+  private readonly api: apigw.RestApi;
+  private readonly credentialsRole: iam.Role;
 
   constructor(scope: cdk.Construct, id: string, props: Props) {
     super(scope, id, props);

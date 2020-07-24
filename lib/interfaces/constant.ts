@@ -1,5 +1,6 @@
-export const Namespace = 'BeeBot';
-export const Region = 'ap-northeast-2';
+export const AppContext = {
+  ns: 'BeeBot',
+};
 
 const apps = [
   'hello_world', 'helper', 'memo',
@@ -9,4 +10,4 @@ export const BotProps = {
   verificationTokenKey: '/BEEBOT/SLACK/TOKEN/VERIFICATION',     // Should be synced with SSM key
   apps: JSON.stringify(apps),
   cmdPrefix: '!',
-}
+};

@@ -4,23 +4,21 @@ import * as cdk from '@aws-cdk/core';
 import { ApiGatewayStack } from '../lib/api-gateway-stack';
 import { SqsStack } from '../lib/sqs-stack';
 import { SlackLambdaStack } from '../lib/slack-lambda-app-stack';
-import { Namespace, Region, BotProps } from '../lib/interfaces/constant';
+import { AppContext, BotProps } from '../lib/interfaces/constant';
 
+const { ns } = AppContext;
 const app = new cdk.App({
-  context: {
-    ns: Namespace,
-    region: Region,
-  },
+  context: AppContext,
 });
 
-const sqsStack = new SqsStack(app, `${Namespace}Sqs`);
-const slackLambdaStack = new SlackLambdaStack(app, `${Namespace}Lambda`, {
+const sqsStack = new SqsStack(app, `${ns}Sqs`);
+const slackLambdaStack = new SlackLambdaStack(app, `${ns}Lambda`, {
   ...BotProps,
   queue: sqsStack.queue,
   dlq: sqsStack.dlq,
 });
 slackLambdaStack.addDependency(sqsStack);
-const apiGatewayStack = new ApiGatewayStack(app, `${Namespace}ApiGateway`, {
+const apiGatewayStack = new ApiGatewayStack(app, `${ns}ApiGateway`, {
   slackEventHandler: slackLambdaStack.slackEventHandler,
 });
 apiGatewayStack.addDependency(slackLambdaStack);
