@@ -6,6 +6,9 @@ Deploy this cdk will provision below architeture on you AWS Account.
 
 ![](/imgs/architecture.png)
 
+> Provisioning this app would charge on your AWS Account.
+> AWS Lambda would dominate your bill and its pricing table is [here](https://aws.amazon.com/ko/lambda/pricing/)
+
 # Prerequisites
 
 - awscli
