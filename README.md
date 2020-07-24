@@ -6,8 +6,16 @@ Deploy this cdk will provision below architeture on you AWS Account.
 
 ![](/imgs/architecture.png)
 
-> Provisioning this app would charge on your AWS Account.
-> AWS Lambda would dominate your bill and its pricing table is [here](https://aws.amazon.com/ko/lambda/pricing/)
+## Pricing
+
+[Lambda Pricing](https://aws.amazon.com/ko/lambda/pricing/)
+[SQS Pricing](https://aws.amazon.com/ko/sqs/pricing/)
+[API Gateway Pricing](https://aws.amazon.com/ko/api-gateway/pricing/)
+
+Bee-bot hooks every message on the channel it is invited.
+If your group send messages 2M per month, the bot will charge you around 8$ per month.
+
+> $8 = API Gateway($7) + Lambda Event($0.4) + Lambda Consumer($0.2) + SQS($0.4)
 
 # Prerequisites
 
