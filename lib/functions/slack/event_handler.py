@@ -11,11 +11,13 @@ ssm = boto3.client('ssm')
 
 queue_url = os.environ['QUEUE_URL']
 VERIFICATION_TOKEN_KEY = os.environ['VERIFICATION_TOKEN_KEY']
+CMD_PREFIX = os.environ['CMD_PREFIX']
+
 VERIFICATION_TOKEN = None
 
 
 def handler(event, context):
-    logger.info(event)
+    logger.debug(event)
 
     if event['token'] != get_veification_token():
         logger.error('Invalid token')
@@ -28,10 +30,14 @@ def handler(event, context):
     if 'bot_id' in event['event']:
         return
 
+    text = event['event']['text']
+    if CMD_PREFIX and not text.startswith(CMD_PREFIX):
+        return
+
     body = json.dumps({
         'channel': event['event']['channel'],
         'user': event['event']['user'],
-        'text': event['event']['text'],
+        'text': text,
     })
     sqs.send_message(
         QueueUrl=queue_url,

@@ -14,7 +14,7 @@ def convert_key(key):
 @on_command(['ㅁㅁ', '메모', 'memo'])
 def run(robot, channel, user, tokens):
     '''메모를 해드립니다. - !memo 이름 "저장할 내용"'''
-    robot.logger.info(tokens)
+    robot.logger.debug(tokens)
 
     if len(tokens) == 0:
         params = robot.brain.get_list(KEY_PATH)

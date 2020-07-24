@@ -41,6 +41,7 @@ export class SlackLambdaStack extends cdk.Stack {
       environment: {
         VERIFICATION_TOKEN_KEY: props.verificationTokenKey,
         QUEUE_URL: props.queue.queueUrl,
+        CMD_PREFIX: props.cmdPrefix,
       },
       currentVersionOptions: {
         removalPolicy: cdk.RemovalPolicy.RETAIN,
