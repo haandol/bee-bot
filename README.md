@@ -58,7 +58,7 @@ Attach path `slack` to it and copy it to clipboard.
 
 ## Add Event-bot and get Access & Verification Tokens
 1. Visit [Slack API](https://api.slack.com/) and click `Start Building` to add bot to your account.
-2. Visit *App Home*, Add below scopes to your *Bot Token Scopes*. `chat:write`, `channels:history`, `channels:read`, `im:read`, `im:history`, `im:write`, `groups:history`, `groups:write`, `groups:read`.
+2. Visit *App Home*, Add below scopes to your *Bot Token Scopes*. `chat:write`, `channels:history`, `im:history`, `im:write`, `groups:history`, `users:write`.
 2. Visit *Event Subscriptions -> Enable Events*, enable events api and set the *Request URL* paste from your clipboard.
 3. Visit *Event Subscriptions -> Subscribe to bot events*, Add bot below events, `message.channels` and `message.im`.
 4. Visit *OAuth & Permissions -> OAuth Tokens & Redirect URLs*, click `Install App to Workspace` and click `Allow`.
