@@ -2,7 +2,7 @@
  
 Bee-bot is a Serverless Slack Bot
 
-Deploy this cdk will provision below architeture on you AWS Account.
+Deploying this CDK app will provision below architeture on you AWS Account.
 
 ![](/imgs/architecture.png)
 
